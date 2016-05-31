@@ -7,6 +7,7 @@ defmodule Commando.Mixfile do
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     consolidate_protocols: Mix.env != :test,
      deps: deps]
   end
 
@@ -27,6 +28,11 @@ defmodule Commando.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [
+      {:exconstructor, "~> 1.0.2"},
+      {:vex, "~> 0.5.5"},
+      {:plug, "~> 1.1.4"},
+      {:poison, "~> 2.0.1"},
+    ]
   end
 end
