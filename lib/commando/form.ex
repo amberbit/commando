@@ -6,6 +6,25 @@ defmodule Commando.Form do
 
       import Vex, only: [valid?: 1]
 
+      def to_map(form) do
+        Map.from_struct(form)
+      end
+
+      def to_map(form, [except: list]) do
+        to_map(form)
+        |> remove_map_keys(list)
+      end
+
+      defp remove_map_keys(map, []) do
+        map
+      end
+
+      defp remove_map_keys(map, [h | t]) do
+        map
+        |> Map.delete(h)
+        |> remove_map_keys(t)
+      end
+
       def errors(form) do
         map = Map.keys(form) |> Enum.filter(&(&1 != :__struct__)) |> Enum.map(&({&1, []})) |> Enum.into(%{})
 
@@ -25,6 +44,10 @@ defmodule Commando.Form do
 
       defp add_error(field_errors, {:error, field, _, error}) do
         [convert_vars(Enum.into(error, %{})) | field_errors]
+      end
+
+      defp add_error(field_errors, {:not_applicable, _, _}) do
+        field_errors
       end
 
       defp convert_vars(error_map) do
